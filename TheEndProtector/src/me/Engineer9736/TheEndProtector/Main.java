@@ -256,4 +256,13 @@ public class Main extends JavaPlugin implements Listener {
 		
 		getLogger().info(msg);
 	}
+	
+	// Check every minute if there are still players on the main island.
+	private void startPlayersCheckLoop() {
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+		    public void run() {
+		    	
+		    }
+		}, 1200, 1200); // 20 ticks = 1 second, 1200 tickets = 1 minute. First 1200 = initial delay, second 1200 = following delays.
+	}
 }
