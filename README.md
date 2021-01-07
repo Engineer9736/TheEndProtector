@@ -7,4 +7,4 @@ If the Ender Dragon is not alive, then the players cannot adjust any blocks on t
 
 If the Ender Dragon is alive, then the players can adjust all blocks to be able to do the necessary to fight the Ender Dragon. For example pillaring up the obsidian towers to destroy the End Crystals.
 
-When the Ender Dragon has been beaten, or there are no players on the main island for 5 minutes, all block changes are reverted, and if the dragon is still alive it will be removed.
+When the Ender Dragon has been beaten, or there are no players on the main island for 5 minutes, all block changes are reverted, and if the dragon is still alive then it will be removed.
