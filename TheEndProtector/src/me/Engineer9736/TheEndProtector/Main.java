@@ -46,11 +46,7 @@ public class Main extends JavaPlugin implements Listener {
 		FIGHTACTIVE,
 		DRAGONKILLED,
 		NOPLAYERSLEFT
-	};
-	
-	/*kill @e[type=minecraft:ender_dragon]
-	  
-	*/
+	};*/
 	
 	//private TheEndStage CurrentStage;
 	
