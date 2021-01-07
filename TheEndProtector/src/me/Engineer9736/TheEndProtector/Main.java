@@ -55,23 +55,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onEnable() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
 		
-		theEnd = Bukkit.getServer().getWorld("world_the_end");
-		
-		// The allowed End Crystal placement locations. The Y axis is ignored as the Exit Portal is
-		// generated at the height of the terrain.
-		endCrystalLocations = new ArrayList<Location>();
-		for (int i = -1; i <= 1; i++) {
-			endCrystalLocations.add(new Location(theEnd, i, 0, 3));
-			endCrystalLocations.add(new Location(theEnd, i, 0, -3));
-			
-			endCrystalLocations.add(new Location(theEnd, 3, 0, i));
-			endCrystalLocations.add(new Location(theEnd, -3, 0, i));
-		}
-		endCrystalLocations.add(new Location(theEnd, -2, 0, 2));
-		endCrystalLocations.add(new Location(theEnd, -2, 0, -2));
-		endCrystalLocations.add(new Location(theEnd, 2, 0, -2));
-		endCrystalLocations.add(new Location(theEnd, 2, 0, 2));
-		
+		theEnd = Bukkit.getServer().getWorld("world_the_end");	
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -205,16 +189,6 @@ public class Main extends JavaPlugin implements Listener {
 		debugMessage("BlockEvent -> shouldBlockEventBeCancelled: BlockEvent cancelled.");
 		p.sendMessage(ChatColor.RED + "As long as the Ender Dragon is not alive, you can only place End Crystals on the Exit Portal to spawn the Ender Dragon.");
 		return true;
-	}
-	
-	private boolean locationIsEndCrystalLocation(Location l) {
-		for (Location crystalLocation : endCrystalLocations) {
-			if (crystalLocation.getX() == l.getX() && crystalLocation.getZ() == l.getZ()) {
-				return true;
-			}
-		}
-		
-		return false;
 	}
 	
 	private boolean locationIsMainIsland(Location l) {
