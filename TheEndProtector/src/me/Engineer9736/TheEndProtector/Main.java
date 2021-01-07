@@ -39,6 +39,8 @@ public class Main extends JavaPlugin implements Listener {
 	
 	private World theEnd;
 	
+	private Boolean debugMessages = true;
+	
 	/*private enum TheEndStage {
 		PEACEFUL,
 		FIGHTACTIVE,
@@ -161,11 +163,11 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onEnderDragonDeath(EntityDeathEvent e){
 	     if(e.getEntity() instanceof EnderDragon){
-	    	 getLogger().info("Dragon has died");
+	    	 debugMessage("Dragon has died");
 	    	 
 	    	 CoreProtectAPI api = getCoreProtect();
 	    	 if (api == null) {
-	    		 getLogger().info("Could not connect to CoreProtect");
+	    		 debugMessage("Could not connect to CoreProtect");
 	    		 return;
 	    	 }
 	    	 
@@ -183,23 +185,23 @@ public class Main extends JavaPlugin implements Listener {
 	private boolean shouldBlockEventBeCancelled(Player p, Block block) {
 		// If the BlockEvent is not regarding The End, then do nothing.
 		if (block.getWorld().getEnvironment() != Environment.THE_END) {
-			getLogger().info("BlockEvent -> shouldBlockEventBeCancelled: Environment is not the end.");
+			debugMessage("BlockEvent -> shouldBlockEventBeCancelled: Environment is not the end.");
 			return false;
 		}
 		
 		// If the BlockEvent was outside the main island, then do not block it.
 		if (!locationIsMainIsland(block.getLocation())) {
-			getLogger().info("BlockEvent -> shouldBlockEventBeCancelled: Event was not on the main island so not cancelled.");
+			debugMessage("BlockEvent -> shouldBlockEventBeCancelled: Event was not on the main island so not cancelled.");
 			return false;
 		}
 		
 		// If the dragon is alive, then do not block BlockEvents.
 		if (dragonIsAlive()) {
-			getLogger().info("BlockEvent -> shouldBlockEventBeCancelled: Dragon is alive, so not cancelled.");
+			debugMessage("BlockEvent -> shouldBlockEventBeCancelled: Dragon is alive, so not cancelled.");
 			return false;
 		}
 		
-		getLogger().info("BlockEvent -> shouldBlockEventBeCancelled: BlockEvent cancelled.");
+		debugMessage("BlockEvent -> shouldBlockEventBeCancelled: BlockEvent cancelled.");
 		p.sendMessage(ChatColor.RED + "As long as the Ender Dragon is not alive, you can only place End Crystals on the Exit Portal to spawn the Ender Dragon.");
 		return true;
 	}
@@ -270,5 +272,13 @@ public class Main extends JavaPlugin implements Listener {
         }
 
         return CoreProtect;
-}
+	}
+	
+	private void debugMessage(String msg) {
+		if (!debugMessages) {
+			return;
+		}
+		
+		getLogger().info(msg);
+	}
 }
