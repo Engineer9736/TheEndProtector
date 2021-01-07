@@ -3,6 +3,7 @@ name: TheEndProtector
 version: 0.1
 author: Engineer9736
 api-version: 1.16
+depend: [CoreProtect]
 
 commands:
   removedragon:
