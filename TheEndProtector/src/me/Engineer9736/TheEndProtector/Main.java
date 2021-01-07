@@ -45,6 +45,7 @@ public class Main extends JavaPlugin implements Listener {
 	private Boolean debugCommands = true;
 	
 	private int checkPlayersScheduledTaskId;
+	private int amountOfMinutesNoPlayersFound = -1;
 	
 	/*private enum TheEndStage {
 		PEACEFUL,
@@ -160,14 +161,7 @@ public class Main extends JavaPlugin implements Listener {
 	    		 return;
 	    	 }
 	    	 
-	    	 /*api.performRollback(int time,
-	    			 List<String> restrict_users,
-	    			 List<String> exclude_users,
-	    			 List<Object> restrict_blocks,
-	    			 List<Object> exclude_blocks,
-	    			 List<Integer> action_list,
-	    			 int radius,
-	    			 Location radius_location);*/
+	    	 performRollback();
 	    }
 	}
 	
@@ -294,12 +288,23 @@ public class Main extends JavaPlugin implements Listener {
 		    public void run() {
 		    	
 		    	if (thereAreNoPlayersOnTheMainIsland()) {
-		    		
-		    		// 
-		    		
+		    		amountOfMinutesNoPlayersFound++;
+		    		debugMessage("There is no player on the main island for " + amountOfMinutesNoPlayersFound + " minutes");
+		    	}
+		    	else { // If there are still players on the island, then set the noplayers counter to 0.
+		    		debugMessage("There is a player on the main island.");
+		    		amountOfMinutesNoPlayersFound = 0;
 		    	}
 		    	
-		    	
+		    	// If there are no players found for 5 minutes, then remove the Ender Dragon and perform rollback.
+		    	if (amountOfMinutesNoPlayersFound >= 5) {
+		    		debugMessage("No players on main island for 5 minutes, removing dragon and rolling back.");
+		    		
+		    		removeDragon();
+		    		
+		    		// The remove dragon function does not trigger the dragon killed event, so the rollback has to be triggered here.
+		    		performRollback();
+		    	}
 		    }
 		}, 1200, 1200); // 20 ticks = 1 second, 1200 tickets = 1 minute. First 1200 = initial delay, second 1200 = following delays.
 	}
@@ -313,5 +318,19 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		
 		return true;
+	}
+	
+	// Roll back the main island as far in history as possible.
+	private void performRollback() {
+		debugMessage("Rolling back the main island");
+		
+		/*api.performRollback(int time,
+   			 List<String> restrict_users,
+   			 List<String> exclude_users,
+   			 List<Object> restrict_blocks,
+   			 List<Object> exclude_blocks,
+   			 List<Integer> action_list,
+   			 int radius,
+   			 Location radius_location);*/
 	}
 }
