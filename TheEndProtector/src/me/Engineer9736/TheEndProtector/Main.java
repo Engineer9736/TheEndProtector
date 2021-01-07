@@ -112,31 +112,49 @@ public class Main extends JavaPlugin implements Listener {
 	// Taken from https://www.spigotmc.org/threads/ender-crystal-place-event.132757/
 	@EventHandler
 	public void onPlayerInteract(final PlayerInteractEvent event) {
-	    if (Action.RIGHT_CLICK_BLOCK == event.getAction()) {
-	        if (Material.OBSIDIAN == event.getClickedBlock().getType()) {
-	            if (Material.END_CRYSTAL == event.getMaterial()) {
-	                Bukkit.getScheduler().runTask(this, new Runnable() {
-	                    @Override
-	                    public void run() {
-	                        List<Entity> entities = event.getPlayer().getNearbyEntities(4, 4, 4);
-
-	                        for (Entity entity : entities) {
-	                            if (EntityType.ENDER_CRYSTAL == entity.getType()) {
-	                                EnderCrystal crystal = (EnderCrystal) entity;
-	                                Block belowCrystal = crystal.getLocation().getBlock().getRelative(BlockFace.DOWN);
-
-	                                if (event.getClickedBlock().equals(belowCrystal)) { // Here is your EnderCrystal entity
-	                                	belowCrystal.breakNaturally();
-	                                	entity.remove();
-	                                    break;
-	                                }
-	                            }
-	                        }
-	                    }
-	                });
-	            }
-	        }
+		
+		// If the event is not regarding a right mouseclick on a block, then do nothing.
+	    if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+	    	return;
 	    }
+	    
+	    // If the event is not regarding a click on an obsidian block, then do nothing.
+	    if (event.getClickedBlock().getType() != Material.OBSIDIAN) {
+	    	return;
+	    }
+	    
+	    // If the event is not regarding placing an End Crystal, then do nothing.
+        if (event.getMaterial() != Material.END_CRYSTAL) {
+        	return;
+        }
+        
+        // 
+        Bukkit.getScheduler().runTask(this, new Runnable() {
+            @Override
+            public void run() {
+            	
+            	// Get all entities nearby the player.
+                List<Entity> entities = event.getPlayer().getNearbyEntities(4, 4, 4);
+
+                // Loop through these entities.
+                for (Entity entity : entities) {
+                	
+                	// If the entity type is not an End Crystal then continue to the next iteration.
+                    if (entity.getType() != EntityType.ENDER_CRYSTAL) {
+                    	continue;
+                    }
+                    
+                    EnderCrystal crystal = (EnderCrystal) entity;
+                    Block belowCrystal = crystal.getLocation().getBlock().getRelative(BlockFace.DOWN);
+
+                    if (event.getClickedBlock().equals(belowCrystal)) { // Here is your EnderCrystal entity
+                    	belowCrystal.breakNaturally();
+                    	entity.remove();
+                        break;
+                    }
+                }
+            }
+        });
 	}
 	
 	// When the dragon dies, rollback 300 radius from 0,0
