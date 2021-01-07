@@ -176,12 +176,6 @@ public class Main extends JavaPlugin implements Listener {
 	     if(e.getEntity() instanceof EnderDragon){
 	    	 debugMessage("Dragon has died");
 	    	 
-	    	 CoreProtectAPI api = getCoreProtect();
-	    	 if (api == null) {
-	    		 debugMessage("Could not connect to CoreProtect");
-	    		 return;
-	    	 }
-	    	 
 	    	 // Stop the players check loop.
 	    	 Bukkit.getScheduler().cancelTask(checkPlayersScheduledTaskId);
 	    	 
@@ -331,29 +325,8 @@ public class Main extends JavaPlugin implements Listener {
 	private void performRollback() {
 		debugMessage("Rolling back the main island");
 		
-		// Rollback one hour, 150 blocks radius from the middle of The End.
-		getCoreProtect().performRollback(3600, null, null, null, null, null, 150, new Location(theEnd, 00, 80, 0));
-	}
-	
-	private CoreProtectAPI getCoreProtect() {
-        Plugin plugin = getServer().getPluginManager().getPlugin("CoreProtect");
-     
-        // Check that CoreProtect is loaded
-        if (plugin == null || !(plugin instanceof CoreProtect)) {
-            return null;
-        }
-
-        // Check that the API is enabled
-        CoreProtectAPI CoreProtect = ((CoreProtect) plugin).getAPI();
-        if (CoreProtect.isEnabled() == false) {
-            return null;
-        }
-
-        // Check that a compatible version of the API is loaded
-        if (CoreProtect.APIVersion() < 6) {
-            return null;
-        }
-
-        return CoreProtect;
+		Runnable runnable = new Rollback();
+		Thread thread = new Thread(runnable);
+		thread.start();
 	}
 }
