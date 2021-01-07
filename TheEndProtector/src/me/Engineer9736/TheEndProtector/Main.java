@@ -208,7 +208,7 @@ public class Main extends JavaPlugin implements Listener {
 		
 		// Check if the location is regarding The End.
 		// For performance, do not combine this check with the coordinate comparisons.
-		if (l.getWorld().getEnvironment() == Environment.THE_END) {
+		if (l.getWorld().getEnvironment() != Environment.THE_END) {
 			return false;
 		}
 		
