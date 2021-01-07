@@ -308,6 +308,6 @@ public class Main extends JavaPlugin implements Listener {
 		
 		Runnable runnable = new Rollback();
 		
-		Bukkit.getScheduler().runTaskLater(this, runnable, 100); // Run after 5 seconds.
+		Bukkit.getScheduler().scheduleSyncDelayedTask(this, runnable, 100); // Run after 5 seconds.
 	}
 }
