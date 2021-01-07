@@ -185,12 +185,6 @@ public class Main extends JavaPlugin implements Listener {
 			return false;
 		}
 		
-		// If the event was about placing End Crystal on the credits portal, then always allow it.
-		if (locationIsEndCrystalLocation(block.getLocation())) {
-			getLogger().info("BlockEvent -> shouldBlockEventBeCancelled: Placing End Crystals on the credits portal is allowed.");
-			return false;
-		}
-		
 		getLogger().info("BlockEvent -> shouldBlockEventBeCancelled: BlockEvent cancelled.");
 		p.sendMessage(ChatColor.RED + "As long as the Ender Dragon is not alive, you can only place End Crystals on the Exit Portal to spawn the Ender Dragon.");
 		return true;
