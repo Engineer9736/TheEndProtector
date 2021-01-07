@@ -25,7 +25,11 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import net.coreprotect.CoreProtect;
+import net.coreprotect.CoreProtectAPI;
 import net.md_5.bungee.api.ChatColor;
 
 public class Main extends JavaPlugin implements Listener {	
@@ -305,9 +309,43 @@ public class Main extends JavaPlugin implements Listener {
 	// Roll back the main island as far in history as possible.
 	private void performRollback() {
 		debugMessage("Rolling back the main island");
-		
-		Runnable runnable = new Rollback();
-		
-		Bukkit.getScheduler().scheduleSyncDelayedTask(this, runnable, 100); // Run after 5 seconds.
+
+		Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+			public void run() {
+				try {
+					CoreProtectAPI CoreProtect = getCoreProtect();
+					if (CoreProtect != null) { // Ensure we have access to the API
+						// Rollback one hour, 150 blocks radius from the middle of The End.
+						World theEnd = Bukkit.getServer().getWorld("world_the_end");
+						CoreProtect.performRollback(3600, null, null, null, null, null, 150, new Location(theEnd, 00, 80, 0));
+					}
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}, 100L); // Run after 5 seconds.
+	}
+	
+	private CoreProtectAPI getCoreProtect() {
+        Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("CoreProtect");
+     
+        // Check that CoreProtect is loaded
+        if (plugin == null || !(plugin instanceof CoreProtect)) {
+            return null;
+        }
+
+        // Check that the API is enabled
+        CoreProtectAPI CoreProtect = ((CoreProtect) plugin).getAPI();
+        if (CoreProtect.isEnabled() == false) {
+            return null;
+        }
+
+        // Check that a compatible version of the API is loaded
+        //if (CoreProtect.APIVersion() < 6) {
+       //     return null;
+        //}
+
+        return CoreProtect;
 	}
 }
