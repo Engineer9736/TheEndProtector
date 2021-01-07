@@ -1,5 +1,5 @@
 # TheEndProtector
-A Spigot plugin which prevents the main island of Minecraft's "The End" dimension from being demolished, while still being able to fight the dragon without limitations.
+A Spigot plugin which prevents the main island of Minecraft's "The End" dimension from being demolished by players, while still being able to fight the dragon without limitations.
 
 Dependencies: CoreProtect (for rollback functionality)
 
