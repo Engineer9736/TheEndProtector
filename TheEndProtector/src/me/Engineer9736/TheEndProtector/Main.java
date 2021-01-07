@@ -107,7 +107,8 @@ public class Main extends JavaPlugin implements Listener {
 		event.setCancelled(shouldBlockEventBeCancelled(p, event.getBlock()));
 	}
 	
-	// End Crystal placements are not seen by BlockEvents. For this the eventhandler below is needed.
+	// If End Crystals are placed on obsidian, then remove it again. Players can only place End Crystals on bedrock
+	// (which is what the Exit Portal is made of)
 	// Taken from https://www.spigotmc.org/threads/ender-crystal-place-event.132757/
 	@EventHandler
 	public void onPlayerInteract(final PlayerInteractEvent event) {
@@ -169,7 +170,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		
 		// If the BlockEvent was outside the main island, then do not block it.
-		if (block.getX() > 150 || block.getX() < -150 || block.getZ() > 150 || block.getZ() < -150) {
+		if (!locationIsMainIsland(block.getLocation())) {
 			getLogger().info("BlockEvent -> shouldBlockEventBeCancelled: Event was not on the main island so not cancelled.");
 			return false;
 		}
@@ -193,6 +194,10 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		
 		return false;
+	}
+	
+	private boolean locationIsMainIsland(Location l) {
+		return l.getX() < 150 && l.getX() > -150 && l.getZ() < 150 && l.getZ() > -150;
 	}
 	
 	private boolean dragonIsAlive(){
