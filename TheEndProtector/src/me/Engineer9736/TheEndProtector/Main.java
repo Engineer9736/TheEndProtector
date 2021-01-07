@@ -306,7 +306,8 @@ public class Main extends JavaPlugin implements Listener {
 		    		performRollback();
 		    	}
 		    }
-		}, 1200, 1200); // 20 ticks = 1 second, 1200 tickets = 1 minute. First 1200 = initial delay, second 1200 = following delays.
+		}, 100, 100); // 20 ticks = 1 second, 1200 tickets = 1 minute. First 1200 = initial delay, second 1200 = following delays.
+		// For debugging, running this loop every 5 seconds is more practical, this is 100 ticks.
 	}
 	
 	private Boolean thereAreNoPlayersOnTheMainIsland() {
