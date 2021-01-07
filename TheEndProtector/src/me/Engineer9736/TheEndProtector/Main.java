@@ -1,6 +1,5 @@
 package me.Engineer9736.TheEndProtector;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -24,21 +23,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EnderDragonChangePhaseEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import net.coreprotect.CoreProtect;
-import net.coreprotect.CoreProtectAPI;
 import net.md_5.bungee.api.ChatColor;
 
-public class Main extends JavaPlugin implements Listener {
-	
-	private ArrayList<Location> endCrystalLocations;
-	
+public class Main extends JavaPlugin implements Listener {	
 	private World theEnd;
 	
 	private Boolean debugMessages = true;
@@ -46,15 +36,6 @@ public class Main extends JavaPlugin implements Listener {
 	
 	private int checkPlayersScheduledTaskId;
 	private int amountOfMinutesNoPlayersFound = 0;
-	
-	/*private enum TheEndStage {
-		PEACEFUL,
-		FIGHTACTIVE,
-		DRAGONKILLED,
-		NOPLAYERSLEFT
-	};*/
-	
-	//private TheEndStage CurrentStage;
 	
 	@Override
 	public void onEnable() {
@@ -326,7 +307,7 @@ public class Main extends JavaPlugin implements Listener {
 		debugMessage("Rolling back the main island");
 		
 		Runnable runnable = new Rollback();
-		Thread thread = new Thread(runnable);
-		thread.start();
+		
+		Bukkit.getScheduler().runTaskLater(this, runnable, 100); // Run after 5 seconds.
 	}
 }
