@@ -138,11 +138,6 @@ public class Main extends JavaPlugin implements Listener {
 	    }
 	}
 	
-	@EventHandler
-	public void onQuit(PlayerQuitEvent e) {
-		getLogger().info("onQuit event has ran.");
-	}
-	
 	// When the dragon dies, rollback 300 radius from 0,0
 	@EventHandler
 	public void onEnderDragonDeath(EntityDeathEvent e){
