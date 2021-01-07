@@ -10,3 +10,4 @@ commands:
   killdragon:
   goto_end:
   goto_overworld:
+  rollbacktest:

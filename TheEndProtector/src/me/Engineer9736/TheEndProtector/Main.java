@@ -45,7 +45,7 @@ public class Main extends JavaPlugin implements Listener {
 	private Boolean debugCommands = true;
 	
 	private int checkPlayersScheduledTaskId;
-	private int amountOfMinutesNoPlayersFound = -1;
+	private int amountOfMinutesNoPlayersFound = 0;
 	
 	/*private enum TheEndStage {
 		PEACEFUL,
@@ -60,7 +60,12 @@ public class Main extends JavaPlugin implements Listener {
 	public void onEnable() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
 		
-		theEnd = Bukkit.getServer().getWorld("world_the_end");	
+		theEnd = Bukkit.getServer().getWorld("world_the_end");
+		
+		// Check if the dragon is alive at startup, if so, start the players check loop.
+		if (dragonIsAlive()) {
+			startPlayersCheckLoop();
+		}
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -89,9 +94,13 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		
 		if (label.equalsIgnoreCase("goto_overworld")) {
-			Location l = new Location(Bukkit.getServer().getWorld("world_overworld"), 00, 80, 0);
+			Location l = new Location(Bukkit.getServer().getWorld("world"), 0, 80, 0);
 			
 			((Player) sender).teleport(l);
+		}
+		
+		if (label.equalsIgnoreCase("rollbacktest")) {
+			performRollback();
 		}
 		
 		return true;
@@ -173,6 +182,10 @@ public class Main extends JavaPlugin implements Listener {
 	    		 return;
 	    	 }
 	    	 
+	    	 // Stop the players check loop.
+	    	 Bukkit.getScheduler().cancelTask(checkPlayersScheduledTaskId);
+	    	 
+	    	 // Rollback the main island.
 	    	 performRollback();
 	    }
 	}
@@ -258,29 +271,7 @@ public class Main extends JavaPlugin implements Listener {
            
         }
     }
-	
-	private CoreProtectAPI getCoreProtect() {
-        Plugin plugin = getServer().getPluginManager().getPlugin("CoreProtect");
-     
-        // Check that CoreProtect is loaded
-        if (plugin == null || !(plugin instanceof CoreProtect)) {
-            return null;
-        }
 
-        // Check that the API is enabled
-        CoreProtectAPI CoreProtect = ((CoreProtect) plugin).getAPI();
-        if (CoreProtect.isEnabled() == false) {
-            return null;
-        }
-
-        // Check that a compatible version of the API is loaded
-        if (CoreProtect.APIVersion() < 6) {
-            return null;
-        }
-
-        return CoreProtect;
-	}
-	
 	private void debugMessage(String msg) {
 		if (!debugMessages) {
 			return;
@@ -340,13 +331,29 @@ public class Main extends JavaPlugin implements Listener {
 	private void performRollback() {
 		debugMessage("Rolling back the main island");
 		
-		/*api.performRollback(int time,
-   			 List<String> restrict_users,
-   			 List<String> exclude_users,
-   			 List<Object> restrict_blocks,
-   			 List<Object> exclude_blocks,
-   			 List<Integer> action_list,
-   			 int radius,
-   			 Location radius_location);*/
+		// Rollback one hour, 150 blocks radius from the middle of The End.
+		getCoreProtect().performRollback(3600, null, null, null, null, null, 150, new Location(theEnd, 00, 80, 0));
+	}
+	
+	private CoreProtectAPI getCoreProtect() {
+        Plugin plugin = getServer().getPluginManager().getPlugin("CoreProtect");
+     
+        // Check that CoreProtect is loaded
+        if (plugin == null || !(plugin instanceof CoreProtect)) {
+            return null;
+        }
+
+        // Check that the API is enabled
+        CoreProtectAPI CoreProtect = ((CoreProtect) plugin).getAPI();
+        if (CoreProtect.isEnabled() == false) {
+            return null;
+        }
+
+        // Check that a compatible version of the API is loaded
+        if (CoreProtect.APIVersion() < 6) {
+            return null;
+        }
+
+        return CoreProtect;
 	}
 }
