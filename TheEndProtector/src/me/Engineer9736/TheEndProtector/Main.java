@@ -168,7 +168,7 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onSpawn(CreatureSpawnEvent event){
 		if (event.getLocation().getWorld().getEnvironment() != Environment.THE_END) {
-			debugMessage("onSpawn: Environment is not the end.");
+			//debugMessage("onSpawn: Environment is not the end."); This is very spammy in the overworld.
 			return;
 		}
 		
@@ -282,7 +282,7 @@ public class Main extends JavaPlugin implements Listener {
 	// Check every minute if there are still players on the main island.
 	// This method is called when the Ender Dragon spawns.
 	// The repeating task is removed when the Ender Dragon is killed.
-	// Bukkit.getScheduler().cancel(id);
+	// 
 	private void startPlayersCheckLoop() {
 		checkPlayersScheduledTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 		    public void run() {
@@ -304,6 +304,9 @@ public class Main extends JavaPlugin implements Listener {
 		    		
 		    		// The remove dragon function does not trigger the dragon killed event, so the rollback has to be triggered here.
 		    		performRollback();
+		    		
+		    		// Stop this loop.
+		    		Bukkit.getScheduler().cancelTask(checkPlayersScheduledTaskId);
 		    	}
 		    }
 		}, 100, 100); // 20 ticks = 1 second, 1200 tickets = 1 minute. First 1200 = initial delay, second 1200 = following delays.
