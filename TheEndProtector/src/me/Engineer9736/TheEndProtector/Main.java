@@ -40,6 +40,7 @@ public class Main extends JavaPlugin implements Listener {
 	private World theEnd;
 	
 	private Boolean debugMessages = true;
+	private Boolean debugCommands = true;
 	
 	/*private enum TheEndStage {
 		PEACEFUL,
@@ -74,6 +75,10 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (!debugCommands) {
+			return false;	
+		}
+		
 		if (label.equalsIgnoreCase("removedragon")) {
 			removeDragon();
 		}
