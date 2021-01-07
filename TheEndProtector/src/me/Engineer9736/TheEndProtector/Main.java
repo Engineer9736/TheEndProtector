@@ -23,6 +23,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EnderDragonChangePhaseEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -41,6 +43,8 @@ public class Main extends JavaPlugin implements Listener {
 	
 	private Boolean debugMessages = true;
 	private Boolean debugCommands = true;
+	
+	private int checkPlayersScheduledTaskId;
 	
 	/*private enum TheEndStage {
 		PEACEFUL,
@@ -167,6 +171,21 @@ public class Main extends JavaPlugin implements Listener {
 	    }
 	}
 	
+	@EventHandler
+	public void onSpawn(CreatureSpawnEvent event){
+		if (event.getLocation().getWorld().getEnvironment() != Environment.THE_END) {
+			debugMessage("onSpawn: Environment is not the end.");
+			return;
+		}
+		
+	   if(event.getEntity() instanceof EnderDragon) {
+		   debugMessage("Dragon has been spawned.");
+		   
+		   // Start a loop which runs every minute to check if there are still players on the main island.
+		   startPlayersCheckLoop();
+	   }
+	}
+	
 	private boolean shouldBlockEventBeCancelled(Player p, Block block) {
 		// If the BlockEvent is not regarding The End, then do nothing.
 		if (block.getWorld().getEnvironment() != Environment.THE_END) {
@@ -192,6 +211,13 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	private boolean locationIsMainIsland(Location l) {
+		
+		// Check if the location is regarding The End.
+		// For performance, do not combine this check with the coordinate comparisons.
+		if (l.getWorld().getEnvironment() == Environment.THE_END) {
+			return false;
+		}
+		
 		return l.getX() < 150 && l.getX() > -150 && l.getZ() < 150 && l.getZ() > -150;
 	}
 	
@@ -257,12 +283,35 @@ public class Main extends JavaPlugin implements Listener {
 		getLogger().info(msg);
 	}
 	
+	
+	
 	// Check every minute if there are still players on the main island.
+	// This method is called when the Ender Dragon spawns.
+	// The repeating task is removed when the Ender Dragon is killed.
+	// Bukkit.getScheduler().cancel(id);
 	private void startPlayersCheckLoop() {
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+		checkPlayersScheduledTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 		    public void run() {
+		    	
+		    	if (thereAreNoPlayersOnTheMainIsland()) {
+		    		
+		    		// 
+		    		
+		    	}
+		    	
 		    	
 		    }
 		}, 1200, 1200); // 20 ticks = 1 second, 1200 tickets = 1 minute. First 1200 = initial delay, second 1200 = following delays.
+	}
+	
+	private Boolean thereAreNoPlayersOnTheMainIsland() {
+		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+			if (locationIsMainIsland(player.getLocation())) {
+				return false;
+			}
+			
+		}
+		
+		return true;
 	}
 }
