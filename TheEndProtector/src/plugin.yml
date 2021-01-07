@@ -8,3 +8,5 @@ commands:
   removedragon:
   spawndragon:
   killdragon:
+  goto_end:
+  goto_overworld:

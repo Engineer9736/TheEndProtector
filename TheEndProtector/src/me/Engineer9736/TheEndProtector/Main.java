@@ -82,6 +82,18 @@ public class Main extends JavaPlugin implements Listener {
 			dragon.setAI(true);
 		}
 		
+		if (label.equalsIgnoreCase("goto_end")) {
+			Location l = new Location(theEnd, 10, 80, 0); // 0,0 would be right on the Exit Portal, so spawn a little to the side of it.
+			
+			((Player) sender).teleport(l);
+		}
+		
+		if (label.equalsIgnoreCase("goto_overworld")) {
+			Location l = new Location(Bukkit.getServer().getWorld("world_overworld"), 00, 80, 0);
+			
+			((Player) sender).teleport(l);
+		}
+		
 		return true;
 	}
 	
