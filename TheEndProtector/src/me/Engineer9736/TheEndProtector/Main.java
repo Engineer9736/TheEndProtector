@@ -1,5 +1,8 @@
 package me.Engineer9736.TheEndProtector;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,7 +136,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		
 		debugMessage("BlockEvent -> shouldBlockEventBeCancelled: BlockEvent cancelled.");
-		p.sendMessage(ChatColor.RED + "Cannot adjust blocks on the main island as the Ender Dragon is not alive." + block.getType().name());
+		p.sendMessage(ChatColor.RED + "Cannot adjust blocks on the main island as the Ender Dragon is not alive.");
 		return true;
 	}
 	
@@ -215,6 +218,18 @@ public class Main extends JavaPlugin implements Listener {
 		
 	   if(event.getEntity() instanceof EnderDragon) {
 		   debugMessage("Dragon has been spawned.");
+		   
+		   // Save the current time minus 2 minutes to a data file to be able to rollback to a clean main island.
+		   // Dragon takes 30 seconds to spawn, so rollback to one minute earlier.
+		   String unix_timestamp = String.valueOf(Instant.now().getEpochSecond() - 60);
+		   try {
+			   BufferedWriter writer = new BufferedWriter(new FileWriter("the_end_protector.dat"));
+			   writer.write(unix_timestamp);
+			   writer.close();
+		   }
+		   catch (Exception e) {
+			   getLogger().info("Could not save the current timestamp to file.");
+		   }
 		   
 		   // Start a loop which runs every minute to check if there are still players on the main island.
 		   startPlayersCheckLoop();
@@ -312,6 +327,8 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	private void cancelAllCheckPlayersScheduledTasks() {
+		debugMessage("Amount of timers " + checkPlayersScheduledTaskIds.size());
+		
 		for (Integer i : checkPlayersScheduledTaskIds) {
 			debugMessage("Stopped scheduled task id " + i);
 			Bukkit.getScheduler().cancelTask(i);

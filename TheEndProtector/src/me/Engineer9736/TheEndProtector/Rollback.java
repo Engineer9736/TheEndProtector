@@ -1,5 +1,10 @@
 package me.Engineer9736.TheEndProtector;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.Instant;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -14,9 +19,30 @@ public class Rollback implements Runnable {
 		try {
 			CoreProtectAPI CoreProtect = getCoreProtect();
 			if (CoreProtect != null) { // Ensure we have access to the API
+				
+				// Get the rollback timestamp from file. This was saved during the dragon spawn event.
+				String dragonSpawnTimeString = "";
+				try {
+					dragonSpawnTimeString = new String (Files.readAllBytes(Paths.get("the_end_protector.dat")));
+		        } 
+		        catch (IOException e) {
+		            e.printStackTrace();
+		        }
+				
+				// Convert the time into an Integer to be able to calculate with it.
+				Integer dragonSpawnTime = Integer.parseInt(dragonSpawnTimeString);
+				
+				// Get the current unix timestamp into an Integer.
+				Integer currentTime = (int) Instant.now().getEpochSecond();
+				
+				// Substract the current time from the dragonSpawnTime
+				Integer rollbackSeconds = currentTime - dragonSpawnTime;
+				
+				//Bukkit.getLogger().info("Rolling back " + rollbackSeconds + " seconds.");
+				
 				// Rollback one hour, 150 blocks radius from the middle of The End.
 				World theEnd = Bukkit.getServer().getWorld("world_the_end");
-				CoreProtect.performRollback(3600, null, null, null, null, null, 150, new Location(theEnd, 00, 80, 0));
+				CoreProtect.performRollback(rollbackSeconds, null, null, null, null, null, 150, new Location(theEnd, 00, 80, 0));
 			}
 		}
 		catch (Exception e) {
