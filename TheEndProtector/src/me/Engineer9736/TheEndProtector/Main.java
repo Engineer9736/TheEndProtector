@@ -111,8 +111,8 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onPlayerInteract(final PlayerInteractEvent event) {
 		// If the PlayerInteract was outside the main island, then do not block it.
-		if (!locationIsMainIsland(event.getClickedBlock().getLocation())) {
-			debugMessage("BlockEvent -> shouldBlockEventBeCancelled: Event was not on the main island so not cancelled.");
+		if (!locationIsMainIsland(event.getPlayer().getLocation())) {
+			debugMessage("onPlayerInteract: Event was not on the main island so not cancelled.");
 			return;
 		}
 				
