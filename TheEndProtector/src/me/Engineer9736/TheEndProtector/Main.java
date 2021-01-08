@@ -105,6 +105,25 @@ public class Main extends JavaPlugin implements Listener {
 		event.setCancelled(shouldBlockEventBeCancelled(p, event.getBlock()));
 	}
 	
+
+	private boolean shouldBlockEventBeCancelled(Player p, Block block) {
+		// If the BlockEvent was outside the main island, then do not block it.
+		if (!locationIsMainIsland(block.getLocation())) {
+			debugMessage("BlockEvent -> shouldBlockEventBeCancelled: Event was not on the main island so not cancelled.");
+			return false;
+		}
+		
+		// If the dragon is alive, then do not block BlockEvents.
+		if (dragonIsAlive()) {
+			debugMessage("BlockEvent -> shouldBlockEventBeCancelled: Dragon is alive, so not cancelled.");
+			return false;
+		}
+		
+		debugMessage("BlockEvent -> shouldBlockEventBeCancelled: BlockEvent cancelled.");
+		p.sendMessage(ChatColor.RED + "Cannot adjust blocks on the main island as the Ender Dragon is not alive.");
+		return true;
+	}
+	
 	// If End Crystals are placed on obsidian, then remove it again. Players can only place End Crystals on bedrock
 	// (which is what the Exit Portal is made of)
 	// Taken from https://www.spigotmc.org/threads/ender-crystal-place-event.132757/
@@ -187,24 +206,6 @@ public class Main extends JavaPlugin implements Listener {
 		   // Start a loop which runs every minute to check if there are still players on the main island.
 		   startPlayersCheckLoop();
 	   }
-	}
-	
-	private boolean shouldBlockEventBeCancelled(Player p, Block block) {
-		// If the BlockEvent was outside the main island, then do not block it.
-		if (!locationIsMainIsland(block.getLocation())) {
-			debugMessage("BlockEvent -> shouldBlockEventBeCancelled: Event was not on the main island so not cancelled.");
-			return false;
-		}
-		
-		// If the dragon is alive, then do not block BlockEvents.
-		if (dragonIsAlive()) {
-			debugMessage("BlockEvent -> shouldBlockEventBeCancelled: Dragon is alive, so not cancelled.");
-			return false;
-		}
-		
-		debugMessage("BlockEvent -> shouldBlockEventBeCancelled: BlockEvent cancelled.");
-		p.sendMessage(ChatColor.RED + "Cannot adjust blocks on the main island as the Ender Dragon is not alive.");
-		return true;
 	}
 	
 	private boolean locationIsMainIsland(Location l) {
