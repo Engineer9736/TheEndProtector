@@ -110,7 +110,12 @@ public class Main extends JavaPlugin implements Listener {
 	// Taken from https://www.spigotmc.org/threads/ender-crystal-place-event.132757/
 	@EventHandler
 	public void onPlayerInteract(final PlayerInteractEvent event) {
-		
+		// If the PlayerInteract was outside the main island, then do not block it.
+		if (!locationIsMainIsland(event.getClickedBlock().getLocation())) {
+			debugMessage("BlockEvent -> shouldBlockEventBeCancelled: Event was not on the main island so not cancelled.");
+			return;
+		}
+				
 		// If the event is not regarding a right mouseclick on a block, then do nothing.
 	    if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
 	    	return;
@@ -185,12 +190,6 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	private boolean shouldBlockEventBeCancelled(Player p, Block block) {
-		// If the BlockEvent is not regarding The End, then do nothing.
-		if (block.getWorld().getEnvironment() != Environment.THE_END) {
-			debugMessage("BlockEvent -> shouldBlockEventBeCancelled: Environment is not the end.");
-			return false;
-		}
-		
 		// If the BlockEvent was outside the main island, then do not block it.
 		if (!locationIsMainIsland(block.getLocation())) {
 			debugMessage("BlockEvent -> shouldBlockEventBeCancelled: Event was not on the main island so not cancelled.");
