@@ -17,6 +17,6 @@ If you are operator ingame, then you can use the following test/debug commands:
 - goto_overworld: Teleport yourself to the overworld.
 - rollbacktest: Run the rollback function. Note that the dragon needs to have been spawned once. Otherwise the plugin doesn't know what time to rollback to.
 
-
+https://www.youtube.com/watch?v=8qQzHvC0gGc
 
 https://www.spigotmc.org/resources/the-end-protector.87624/
