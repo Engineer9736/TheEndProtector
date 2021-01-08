@@ -186,7 +186,7 @@ public class Main extends JavaPlugin implements Listener {
                     Block belowCrystal = crystal.getLocation().getBlock().getRelative(BlockFace.DOWN);
 
                     if (event.getClickedBlock().equals(belowCrystal)) { // Here is your EnderCrystal entity
-                    	belowCrystal.breakNaturally();
+                    	//belowCrystal.breakNaturally();
                     	entity.remove();
                         break;
                     }
