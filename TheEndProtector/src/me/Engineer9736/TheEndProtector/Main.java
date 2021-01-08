@@ -29,18 +29,14 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import net.coreprotect.CoreProtect;
-import net.coreprotect.CoreProtectAPI;
 import net.md_5.bungee.api.ChatColor;
 
 public class Main extends JavaPlugin implements Listener {	
 	private World theEnd;
 	
-	private Boolean debugMessages = true;
-	private Boolean debugCommands = true;
+	private Boolean debugMessages = false;
+	private Boolean debugCommands = false;
 	
 	private ArrayList<Integer> checkPlayersScheduledTaskIds;
 	private int amountOfMinutesNoPlayersFound = 0;
@@ -319,7 +315,7 @@ public class Main extends JavaPlugin implements Listener {
 		    		cancelAllCheckPlayersScheduledTasks();
 		    	}
 		    }
-		}, 100, 100); // 20 ticks = 1 second, 1200 tickets = 1 minute. First 1200 = initial delay, second 1200 = following delays.
+		}, 1200, 1200); // 20 ticks = 1 second, 1200 tickets = 1 minute. First 1200 = initial delay, second 1200 = following delays.
 		// For debugging, running this loop every 5 seconds is more practical, this is 100 ticks.
 		
 		// Add the task id to the array to keep track of it.
