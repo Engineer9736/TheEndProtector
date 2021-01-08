@@ -17,4 +17,5 @@ goto_end: Teleport yourself to The End.
 goto_overworld: Teleport yourself to the overworld.
 rollbacktest: Run the rollback function. Note that the dragon needs to have been spawned once. Otherwise the plugin doesn't know what time to rollback to.
 
+
 https://www.spigotmc.org/resources/the-end-protector.87624/
