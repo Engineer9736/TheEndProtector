@@ -36,7 +36,6 @@ public class Main extends JavaPlugin implements Listener {
 	private World theEnd;
 	
 	private Boolean debugMessages = false;
-	private Boolean debugCommands = false;
 	
 	private ArrayList<Integer> checkPlayersScheduledTaskIds;
 	private int amountOfMinutesNoPlayersFound = 0;
@@ -56,7 +55,14 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!debugCommands) {
+		if (!(sender instanceof Player)) {
+			return false;
+		}
+		
+		Player p = (Player) sender;
+		
+		if (!p.isOp()) {
+			p.sendMessage(ChatColor.RED + "You have no permissions to use this command.");
 			return false;	
 		}
 		
