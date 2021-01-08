@@ -1,5 +1,6 @@
 package me.Engineer9736.TheEndProtector;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -38,7 +39,7 @@ public class Main extends JavaPlugin implements Listener {
 	private Boolean debugMessages = true;
 	private Boolean debugCommands = true;
 	
-	private int checkPlayersScheduledTaskId;
+	private ArrayList<Integer> checkPlayersScheduledTaskIds;
 	private int amountOfMinutesNoPlayersFound = 0;
 	
 	@Override
@@ -46,6 +47,8 @@ public class Main extends JavaPlugin implements Listener {
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
 		
 		theEnd = Bukkit.getServer().getWorld("world_the_end");
+		
+		checkPlayersScheduledTaskIds = new ArrayList<Integer>();
 		
 		// Check if the dragon is alive at startup, if so, start the players check loop.
 		if (dragonIsAlive()) {
@@ -92,8 +95,10 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	@EventHandler
-	public void onPlace(BlockBreakEvent event) {
+	public void onPlace(BlockBreakEvent event) {	
 		Player p = event.getPlayer();
+		
+		//p.sendMessage("Breakevent");
 		
 		event.setCancelled(shouldBlockEventBeCancelled(p, event.getBlock()));
 	}
@@ -101,6 +106,8 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onPlace(BlockPlaceEvent event) {
 		Player p = event.getPlayer();
+		
+		//p.sendMessage("Placeevent " + event.getBlock().getLocation().toString());
 
 		event.setCancelled(shouldBlockEventBeCancelled(p, event.getBlock()));
 	}
@@ -119,8 +126,14 @@ public class Main extends JavaPlugin implements Listener {
 			return false;
 		}
 		
+		// When placing the last End Crystal to spawn the dragon, a BlockPlaceEvent placing bedrock at 3,58,1 is triggered
+		// for some reason. As it cannot be the player doing this, just allow it to happen.
+		if (block.getType() == Material.BEDROCK) {
+			return false;
+		}
+		
 		debugMessage("BlockEvent -> shouldBlockEventBeCancelled: BlockEvent cancelled.");
-		p.sendMessage(ChatColor.RED + "Cannot adjust blocks on the main island as the Ender Dragon is not alive.");
+		p.sendMessage(ChatColor.RED + "Cannot adjust blocks on the main island as the Ender Dragon is not alive." + block.getType().name());
 		return true;
 	}
 	
@@ -186,7 +199,7 @@ public class Main extends JavaPlugin implements Listener {
 	    	 debugMessage("Dragon has died");
 	    	 
 	    	 // Stop the players check loop.
-	    	 Bukkit.getScheduler().cancelTask(checkPlayersScheduledTaskId);
+	    	 cancelAllCheckPlayersScheduledTasks();
 	    	 
 	    	 // Rollback the main island.
 	    	 performRollback();
@@ -266,7 +279,7 @@ public class Main extends JavaPlugin implements Listener {
 	// The repeating task is removed when the Ender Dragon is killed.
 	// 
 	private void startPlayersCheckLoop() {
-		checkPlayersScheduledTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+		Integer checkPlayersScheduledTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 		    public void run() {
 		    	
 		    	if (thereAreNoPlayersOnTheMainIsland()) {
@@ -288,11 +301,23 @@ public class Main extends JavaPlugin implements Listener {
 		    		performRollback();
 		    		
 		    		// Stop this loop.
-		    		Bukkit.getScheduler().cancelTask(checkPlayersScheduledTaskId);
+		    		cancelAllCheckPlayersScheduledTasks();
 		    	}
 		    }
 		}, 100, 100); // 20 ticks = 1 second, 1200 tickets = 1 minute. First 1200 = initial delay, second 1200 = following delays.
 		// For debugging, running this loop every 5 seconds is more practical, this is 100 ticks.
+		
+		// Add the task id to the array to keep track of it.
+		checkPlayersScheduledTaskIds.add(checkPlayersScheduledTaskId);
+	}
+	
+	private void cancelAllCheckPlayersScheduledTasks() {
+		for (Integer i : checkPlayersScheduledTaskIds) {
+			debugMessage("Stopped scheduled task id " + i);
+			Bukkit.getScheduler().cancelTask(i);
+		}
+		
+		checkPlayersScheduledTaskIds.clear();
 	}
 	
 	private Boolean thereAreNoPlayersOnTheMainIsland() {
