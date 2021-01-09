@@ -93,6 +93,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		
 		if (label.equalsIgnoreCase("rollbacktest")) {
+			p.sendMessage(ChatColor.YELLOW + "Rollback will start in 5 seconds.");
 			performRollback();
 		}
 		
