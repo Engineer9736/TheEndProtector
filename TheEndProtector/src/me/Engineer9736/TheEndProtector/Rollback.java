@@ -27,10 +27,27 @@ public class Rollback implements Runnable {
 		        } 
 		        catch (IOException e) {
 		            e.printStackTrace();
+		            
+		            Bukkit.getLogger().info("Could not read the_end_protector.dat, stopping rollback.");
+		            return;
 		        }
 				
 				// Convert the time into an Integer to be able to calculate with it.
-				Integer dragonSpawnTime = Integer.parseInt(dragonSpawnTimeString);
+				Integer dragonSpawnTime = 0;
+				try {
+					dragonSpawnTime = Integer.parseInt(dragonSpawnTimeString);
+				}
+				catch (Exception e) {
+					Bukkit.getLogger().info("Could not convert the value in the_end_protector to an Integer, stopping rollback.");
+					return;
+				}
+
+				// Check that the dragonSpawnTime value is a plausible value.
+				if (dragonSpawnTime < 1577836800) { // 1577836800 = 1 Jan 2020
+					Bukkit.getLogger().info("The dragon spawn time read from the_end_protector.dat was before 1 Jan 2020, this is probably not right, so stopping rollback.");
+					return;
+				}
+				
 				
 				// Get the current unix timestamp into an Integer.
 				Integer currentTime = (int) Instant.now().getEpochSecond();
