@@ -68,11 +68,13 @@ public class Main extends JavaPlugin implements Listener {
 		
 		if (label.equalsIgnoreCase("removedragon")) {
 			p.sendMessage(ChatColor.YELLOW + "Note that /removedragon will not trigger the rollback function. Use /killdragon for this.");
-			removeDragon();
+			Integer removedDragons = removeDragon();
+			p.sendMessage(ChatColor.GREEN + removedDragons.toString() + " dragon(s) have been killed.");
 		}
 		
 		if (label.equalsIgnoreCase("killdragon")) {
-			killDragon();
+			Integer killedDragons = killDragon();
+			p.sendMessage(ChatColor.GREEN + killedDragons.toString() + " dragon(s) have been killed.");
 		}
 		
 		if (label.equalsIgnoreCase("spawndragon")) {
@@ -257,30 +259,36 @@ public class Main extends JavaPlugin implements Listener {
             if (j instanceof EnderDragon) {
             	return true;
             }
-           
         }
         
         return false;
     }
 	
-	private void removeDragon(){
+	private Integer removeDragon(){
         List<LivingEntity> Vivos = theEnd.getLivingEntities();
+        Integer removedDragons = 0;
+        
         for (LivingEntity j : Vivos) {
             if (j instanceof EnderDragon) {
             	j.remove();
+            	removedDragons++;
             };
-           
         }
+        
+        return removedDragons;
     }
 	
-	private void killDragon(){
+	private Integer killDragon(){
         List<LivingEntity> Vivos = theEnd.getLivingEntities();
+        Integer killedDragons = 0;
         for (LivingEntity j : Vivos) {
             if (j instanceof EnderDragon) {
             	j.setHealth(0);
+            	killedDragons++;
             };
-           
         }
+        
+        return killedDragons;
     }
 
 	private void debugMessage(String msg) {
