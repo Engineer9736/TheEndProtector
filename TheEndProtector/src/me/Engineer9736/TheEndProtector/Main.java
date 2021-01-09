@@ -67,7 +67,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		
 		if (label.equalsIgnoreCase("removedragon")) {
-			p.sendMessage(ChatColor.YELLOW + "Note that removedragon will not trigger the rollback function. Use /killdragon for this.");
+			p.sendMessage(ChatColor.YELLOW + "Note that /removedragon will not trigger the rollback function. Use /killdragon for this.");
 			removeDragon();
 		}
 		
