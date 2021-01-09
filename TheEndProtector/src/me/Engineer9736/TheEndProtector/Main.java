@@ -74,14 +74,14 @@ public class Main extends JavaPlugin implements Listener {
 		
 		if (label.equalsIgnoreCase("killdragon")) {
 			Integer killedDragons = killDragon();
-			p.sendMessage(ChatColor.GREEN + killedDragons.toString() + " dragon(s) have been killed.");
+			p.sendMessage(ChatColor.GREEN + killedDragons.toString() + " dragon(s) have been killed. Rollback will start in 5 seconds.");
 		}
 		
 		if (label.equalsIgnoreCase("spawndragon")) {
 			Location l = new Location(theEnd, 0, 80, 0);
 			EnderDragon dragon = theEnd.spawn(l, EnderDragon.class);
 			dragon.setAI(true);
-			p.sendMessage(ChatColor.GREEN + "The dragon has been spawned. Rollback timestamp has been saved and the main island is now modifiable.");
+			p.sendMessage(ChatColor.GREEN + "The dragon has been spawned. Rollback timestamp has been saved and the main island is now modifiable. Use /killdragon to kill the dragon and initiate rollback.");
 		}
 		
 		if (label.equalsIgnoreCase("goto_end")) {
