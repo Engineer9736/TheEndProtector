@@ -81,6 +81,7 @@ public class Main extends JavaPlugin implements Listener {
 			Location l = new Location(theEnd, 0, 80, 0);
 			EnderDragon dragon = theEnd.spawn(l, EnderDragon.class);
 			dragon.setAI(true);
+			p.sendMessage(ChatColor.GREEN + "The dragon has been spawned. Rollback timestamp has been saved and the main island is now modifiable.");
 		}
 		
 		if (label.equalsIgnoreCase("goto_end")) {
