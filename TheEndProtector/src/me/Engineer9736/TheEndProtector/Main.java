@@ -44,7 +44,12 @@ public class Main extends JavaPlugin implements Listener {
 	public void onEnable() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
 		
-		theEnd = Bukkit.getServer().getWorld("world_the_end");
+		theEnd = getTheEnd();
+		
+		if (theEnd == null) {
+			getLogger().info("Error: Cannot find the The End world!");
+			return;
+		}
 		
 		checkPlayersScheduledTaskIds = new ArrayList<Integer>();
 		
@@ -374,5 +379,13 @@ public class Main extends JavaPlugin implements Listener {
 		}, 100L); // Run after 5 seconds.
 	}
 	
-	
+	private World getTheEnd() {
+	    for (World w: Bukkit.getServer().getWorlds()) {
+	        if(w.getEnvironment().equals(World.Environment.THE_END)) {
+	            return w;
+	        }
+	    }
+	    
+	    return null;
+	}
 }

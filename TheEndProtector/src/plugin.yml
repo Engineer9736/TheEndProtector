@@ -1,6 +1,6 @@
 main: me.Engineer9736.TheEndProtector.Main
 name: TheEndProtector
-version: 0.3
+version: 0.4
 author: Engineer9736
 api-version: 1.16
 depend: [CoreProtect]
