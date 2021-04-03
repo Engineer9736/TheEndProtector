@@ -7,6 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="C:/Users/Richard/Desktop/spigot/spigot-1.16.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Richard/Desktop/spigot/plugins/CoreProtect-19.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Richard/Desktop/paper-server/plugins/CoreProtect-19.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

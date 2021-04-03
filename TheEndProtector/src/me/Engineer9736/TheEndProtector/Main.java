@@ -115,7 +115,9 @@ public class Main extends JavaPlugin implements Listener {
 		
 		//p.sendMessage("Breakevent");
 		
-		event.setCancelled(shouldBlockEventBeCancelled(p, event.getBlock()));
+		if (shouldBlockEventBeCancelled(p, event.getBlock())) {
+			event.setCancelled(true);
+		}
 	}
 	
 	@EventHandler
@@ -124,7 +126,9 @@ public class Main extends JavaPlugin implements Listener {
 		
 		//p.sendMessage("Placeevent " + event.getBlock().getLocation().toString());
 
-		event.setCancelled(shouldBlockEventBeCancelled(p, event.getBlock()));
+		if (shouldBlockEventBeCancelled(p, event.getBlock())) {
+			event.setCancelled(true);
+		}
 	}
 	
 
